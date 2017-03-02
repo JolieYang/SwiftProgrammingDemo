@@ -14,7 +14,7 @@ var str = "Hello, playground"
 // 0.1)创建空数组
 var someInts = [Int]()
 // 0.2)带默认值的数组
-var threeInts = Array(count: 3, repeatedValue: 0)
+var threeInts = Array(repeating: 1, count: 3)
 // 0.3)数组字面量构造数组
 var shoppingList = ["Eggs", "Apples"]
 // 0.4) 两个数组组合创建一个数组
@@ -33,9 +33,10 @@ if someInts.isEmpty {
 // 3.1) 增加元素
 someInts.append(1)
 someInts += [2, 3, 4, 5]
-someInts.insert(100, atIndex: 3) // index不能超过数组长度(ps: 书中写的是count-1).也就是不可越界插值，插入时差到后面
+//someInts.insert(100, atIndex: 3) // index不能超过数组长度(ps: 书中写的是count-1).也就是不可越界插值，插入时差到后面
+someInts.insert(100, at: 3)
 // 3.2) 删除元素
-someInts.removeAtIndex(0)
+someInts.remove(at: 0)
 someInts.removeLast()
 // 3.3) 改值
 someInts[0] = 0 // 改单个元素值
@@ -48,7 +49,7 @@ var firstItem = someInts[0] // 下标法
 for item in shoppingList {// 遍历数组值
     print(item)
 }
-for (index, value) in shoppingList.enumerate() {// 遍历索引和值
+for (index, value) in shoppingList.enumerated() {// 遍历索引和值
     print("index:\(index), value:\(value)")
 }
 /**
@@ -94,26 +95,26 @@ for genres in favoriteGenres {
 var oddDigits: Set = [1, 3, 5, 7, 9]
 var primeDigist: Set = [2, 3, 5, 11]
 // 5.1) 将两个集合中相同的值创建成一个新的集合
-var same = oddDigits.intersect(primeDigist) // {5, 3}
+var same = oddDigits.intersection(primeDigist) // {5, 3}
 // 5.2) 在一个集合中但不在两个集合中的创建一个集合
 //var difference = oddDigits.symmetricDifference(primeDigist) // swift2中无该函数
 // 5.3) 将两个集合的值创建成一个集合
 var union = oddDigits.union(primeDigist) // {1,2,3,5,7,9,11}
 // 5.4) 将不再该集合的值创建一个新的集合
-var subtract = oddDigits.subtract(primeDigist)// odd不再PrimeDigit中的值 {1,7,9}
+var subtract = oddDigits.subtracting(primeDigist)// odd不再PrimeDigit中的值 {1,7,9}
 
 // 6) 集合成员关系 ps: Swift2中与Swift3中这一系列代码有调整
 var anotherOddDigits: Set = [3, 5]
 oddDigits = [1, 3, 5]
 primeDigist = [2, 7]
 // 6.1) 一个集合的值是否被包含在另一个集合中(可以相等, 不相等则使用isStrictSubset)
-anotherOddDigits.isSubsetOf(oddDigits) // true
-anotherOddDigits.isStrictSubsetOf(anotherOddDigits) // false
+anotherOddDigits.isSubset(of: oddDigits) // true
+anotherOddDigits.isStrictSubset(of: anotherOddDigits) // false
 // 6.2) 一个集合中包含另一个集合所有的值(可以相等, 不相等则使用isStrictSuperset)
-oddDigits.isSupersetOf(anotherOddDigits)
+oddDigits.isSuperset(of: anotherOddDigits)
 // 6.3) 判断两个集合是否没有交集
-anotherOddDigits.isDisjointWith(primeDigist) // true
-anotherOddDigits.isDisjointWith(oddDigits) // false
+anotherOddDigits.isDisjoint(with: primeDigist) // true
+anotherOddDigits.isDisjoint(with: oddDigits) // false
 
 /**
  * 字典(Dictionaries)
@@ -124,7 +125,8 @@ anotherOddDigits.isDisjointWith(oddDigits) // false
 // 0.1) 构造法创建拥有确定类型的空字典
 //var namesOfIntegers = Int: String // Swift2中不支持
 // 0.2) 字面量创建字典
-var namesOfIntegers = [:] // 空字典
+//var namesOfIntegers = Int: String // 空字典
+var namesOfIntegers = [Int: String]()
 namesOfIntegers = [1: "jolie", 2: "rose"]
 var airports:[String: String] = ["YYZ": "Toronto Pearson", "DUB": "Dublin"]
 
@@ -141,7 +143,7 @@ if airports.isEmpty {
 airports["LHR"] = "London"
 // 3.2) 删
 airports["LHR"] = nil
-airports.removeValueForKey("LHR") // 返回nil则表明字典中本来无该键值的元素
+airports.removeValue(forKey: "LHR") // 返回nil则表明字典中本来无该键值的元素
 // 3.3) 改
 airports["LHR"] = "London Heathrow"
 let oldValue = airports.updateValue("London", forKey: "LHR") // 返回更新之前的值，更新之前无值则返回nil。 所以oldValue是一个可选类型
