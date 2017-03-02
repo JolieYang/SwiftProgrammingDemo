@@ -52,6 +52,9 @@ for item in shoppingList {// 遍历数组值
 for (index, value) in shoppingList.enumerated() {// 遍历索引和值
     print("index:\(index), value:\(value)")
 }
+for index in shoppingList.enumerated() {
+    print("index:\(index)")
+}
 /**
  * 集合(Sets)
  * 1st, March, 2017
