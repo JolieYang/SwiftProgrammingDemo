@@ -71,7 +71,7 @@ struct Rect {
     }
     // 只读计算属性
     var area: Double {
-        return size.width * size.height
+        return size.width * size.height // 即为get
     }
 }
 // 属性观察器
@@ -133,4 +133,152 @@ struct AudioChannel {
 var leftChannel = AudioChannel()
 var rightChannel = AudioChannel()
 
+/**
+ * Method
+ * 6th,March,2017
+ * 组成： 实例方法(Instance Method)与类型方法(Type Method)
+ * 特点：
+ * Tip: 值类型可以通过mutating关键字在方法中修改属性值,可变方法能够赋给隐含属性 self 一个全新的实例
+ */
+// 实例方法
+struct Circle{
+    var x = 0.0, y = 0.0
+    mutating func moveByX(deltaX: Double, y deltaY: Double) {
+        x += deltaX
+        y += deltaY
+    }
+}
 
+var somePoint = Circle(x: 1.0, y: 1.0)
+somePoint.moveByX(deltaX: 2.0, y: 3.0)
+
+enum TriStateSwitch {
+    case Off, Low, High
+    mutating func next() {
+        switch self {
+        case .Off:
+            self = .Low
+        case .Low:
+            self = .High
+        case .High:
+            self = .Off
+        }
+    }
+}
+var ovenLight = TriStateSwitch.Low
+ovenLight.next()
+ovenLight.next()
+// 类型方法
+struct LevelTracker {
+    static var highestUnlockedLevel = 1
+    var currentLevel = 1
+    
+    static func unlock(_ level: Int) {
+        if level > highestUnlockedLevel {
+            highestUnlockedLevel = level
+        }
+    }
+    
+    static func isUnlocked(_ level: Int) -> Bool {
+        return level <= highestUnlockedLevel
+    }
+    
+    mutating func advance(to level: Int) -> Bool {
+        if LevelTracker.isUnlocked(level) {
+            currentLevel = level
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+class Player {
+    var tracker = LevelTracker()
+    let playerName: String
+    func complete(level: Int) {
+        LevelTracker.unlock(level + 1)
+        tracker.advance(to: level + 1)
+    }
+    
+    init(name: String) {
+        playerName = name
+    }
+}
+var player = Player(name: "jolie")
+player.complete(level: 1)
+LevelTracker.highestUnlockedLevel
+
+player = Player(name: "rose")
+if player.tracker.advance(to: 6) {
+    print("player is now on level 6")
+} else {
+    print("Level 6 has yet been lockes")
+}
+
+class OtherClass {
+    class func someTypeMethod() {
+        print("hello,6th,March")
+    }
+}
+OtherClass.someTypeMethod()
+
+/**
+ * 继承
+ * 6th,March,2017
+ * 组成：
+ * 特点：子类可以重写实例方法，类方法，实力属性，或下标。继承是区分类和其他类型的一个基本特征
+ * Tip:  重写前加override关键字；通过super前缀访问超类中的方法，属性或下标
+ * Tip: 防止重写， 方法，属性或下标通过添加关键字final。
+ */
+// 生成基类
+class Vehicle {
+    var currentSpeed = 0.0
+    var descripition: String {
+        return "traveling at \(currentSpeed) miles per hour"
+    }
+    func makeNoise() {
+    }
+}
+// 生成子类
+class Bicycle: Vehicle {
+    var hasBasket = false
+}
+let bicycle = Bicycle()
+bicycle.currentSpeed = 15.0
+bicycle.descripition
+
+// 重写:子类可以为继承来的实例方法，类方法，实例属性，或下标提供自己定制的实现
+class Train: Vehicle {
+    override func makeNoise() {
+        print("Choo choo")
+    }
+}
+// 重写属性的getter和setter.可以将只读属性重写为读写属性，但无法将读写属性重写为只读属性
+class Car: Vehicle {
+    var gear = 1
+    override var descripition: String {
+        return super.descripition + " in gear \(gear)"
+    }
+}
+let car = Car()
+car.currentSpeed = 25.0
+car.gear = 3
+car.descripition
+
+// 重写属性观察器
+class AutomaticCar:Car {
+    override var currentSpeed: Double {
+        didSet {
+            gear = Int(currentSpeed / 10.0) + 1
+        }
+    }
+}
+
+/**
+ * 继承
+ * 6th,March,2017
+ * 组成：
+ * 特点：
+ * Tip:
+ */
