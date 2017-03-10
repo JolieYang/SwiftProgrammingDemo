@@ -317,6 +317,98 @@ class AutomaticCar:Car {
         }
     }
 }
+/**
+ * 扩展
+ * 10th,March,2017
+ * 组成：
+ * 特点：
+ * Tip:
+ */
+// 1. 使已有类型符合某个协议
+//extension SomeType: SomeProtocol, AnotherProctocol {
+//    
+//}
+// 2.添加计算型属性和计算型类型属性
+extension Double {
+    var km: Double {
+        return self * 1000.0
+    }
+    var cm: Double {
+        return self / 100.0
+    }
+    var mm: Double {
+        return self / 1000.0
+    }
+}
+let oneInch = 25.4.cm
+// 3.构造器 能为类添加新的便利构造器，但无法添加新的指定构造器或析构器
+struct ARect {
+    var origin = Point()
+    var size = Size()
+}
+let defaultRect = ARect() // 默认构造器
+let memberwiseRect = ARect(origin: Point(x: 2.0, y: 2.0), size: Size(width: 5.0, height: 5.0))
+extension ARect {
+    init(center: Point, size: Size) {
+        let originX = center.x - size.width/2
+        let originY = center.y - size.height/2
+        self.init(origin: Point(x: originX, y: originY), size: size)
+    }
+}
+// 4. 方法
+// 添加实例方法
+extension Int {
+    func repetitions(task: () -> Void) {
+        for _ in 0..<self {
+            task()
+        }
+    }
+    static func task() {
+        print("Int task")
+    }
+}
+var aInt = 3
+aInt.repetitions {
+    print("hello")
+}
+Int.task()
+
+// 可变实例方法
+extension Int {
+    mutating func square() {
+        self = self * self
+    }
+}
+aInt.square()
+// 5. 下标
+extension Int {
+    subscript(digitIndex: Int) -> Int {
+        var decimalBase = 1
+        for _ in 0..<digitIndex {
+            decimalBase *= 10
+        }
+        return (self/decimalBase) % 10
+    }
+}
+739984[0]
+739984[1]
+// 6. 嵌套类型
+extension Int {
+    enum Kind {
+        case Negative, Zero, Positive
+    }
+    var kind: Kind {
+        switch self {
+        case 0:
+            return .Zero
+        case let x where x > 0:
+            return .Positive
+        default:
+            return .Negative
+        }
+    }
+}
+
 
 /**
  * 继承
